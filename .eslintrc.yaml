@@ -1,0 +1,22 @@
+root: true
+parser: '@typescript-eslint/parser'
+extends:
+  - react-app
+  - react-app/jest
+  - eslint:recommended
+  - 'plugin:@typescript-eslint/recommended'
+  - 'plugin:react-hooks/recommended'
+  - prettier
+plugins:
+  - react-hooks
+  - '@typescript-eslint'
+rules:
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: warn
+  '@typescript-eslint/explicit-function-return-type': off
+overrides:
+  - files:
+      - '*.ts'
+      - '*.tsx'
+    rules:
+      '@typescript-eslint/explicit-function-return-type': error
