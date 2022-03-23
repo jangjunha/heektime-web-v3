@@ -1,10 +1,11 @@
 import * as t from 'io-ts';
-import { DateFromISOString } from 'io-ts-types';
+
+import { TimestampReferenceCodec } from './utils';
 
 const userCodec = t.type({
   username: t.string,
-  createdAt: DateFromISOString,
-  updatedAt: DateFromISOString,
+  createdAt: TimestampReferenceCodec,
+  updatedAt: TimestampReferenceCodec,
 });
 
 export { userCodec };

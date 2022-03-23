@@ -1,4 +1,4 @@
-import { DocumentReference } from 'firebase/firestore';
+import { DocumentReference, Timestamp } from 'firebase/firestore';
 import * as t from 'io-ts';
 
 export function optional<A, O>(
@@ -22,4 +22,11 @@ export const DocumentReferenceCodec = new t.Type<
   (u: unknown): u is DocumentReference => u instanceof DocumentReference,
   (u, c) => (u instanceof DocumentReference ? t.success(u) : t.failure(u, c)),
   t.identity
+);
+
+export const TimestampReferenceCodec = new t.Type<Date, Timestamp, unknown>(
+  'TimestampReference',
+  (u: unknown): u is Date => u instanceof Date,
+  (u, c) => (u instanceof Timestamp ? t.success(u.toDate()) : t.failure(u, c)),
+  Timestamp.fromDate
 );

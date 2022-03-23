@@ -1,0 +1,14 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    height: 46px;
+  }
+
+  .content {
+    flex: 1;
+    overflow: auto;
+  }
+}

@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { LoginContext } from '../context/login';
+import Layout from '../components/Layout';
+import { LoginContext } from '../contexts/login';
 
 const HomePage = (): React.ReactElement => {
   const [authUser] = useContext(LoginContext);
   return (
-    <div>
+    <Layout>
       Home
       <div>
         {authUser != null ? (
@@ -23,7 +24,7 @@ const HomePage = (): React.ReactElement => {
           </>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

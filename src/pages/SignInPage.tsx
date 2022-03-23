@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Layout from '../components/Layout';
 import { auth } from '../firebase';
 
 const LEGACY_USER_EMAIL_DOMAIN = 'user.heektime.heek.kr';
@@ -59,7 +60,7 @@ const SignInPage = (): React.ReactElement => {
   };
 
   return (
-    <div>
+    <Layout>
       {errorMessage != null && <p>{errorMessage}</p>}
       <input type="email" value={email} onChange={handleChangeEmail} />
       <input
@@ -69,7 +70,7 @@ const SignInPage = (): React.ReactElement => {
         onKeyDown={handleKeyDown}
       />
       <button onClick={handleClickSubmit}>Sign-In</button>
-    </div>
+    </Layout>
   );
 };
 

@@ -2,6 +2,7 @@ import { signOut } from 'firebase/auth';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import Layout from '../components/Layout';
 import { auth } from '../firebase';
 
 interface State {
@@ -25,10 +26,10 @@ const SignOutPage = (): React.ReactElement => {
   }
 
   return (
-    <div>
+    <Layout>
       <p>로그아웃 하시겠습니까?</p>
       <button onClick={handleClick}>Sign-Out</button>
-    </div>
+    </Layout>
   );
 };
 

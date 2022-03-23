@@ -1,7 +1,6 @@
 import * as t from 'io-ts';
-import { DateFromISOString } from 'io-ts-types';
 
-import { DocumentReferenceCodec } from './utils';
+import { DocumentReferenceCodec, TimestampReferenceCodec } from './utils';
 
 const visibilityCodec = t.keyof({
   public: null,
@@ -12,8 +11,8 @@ const timetableCodec = t.type({
   title: t.string,
   visibility: visibilityCodec,
   semester: DocumentReferenceCodec,
-  createdAt: DateFromISOString,
-  updatedAt: DateFromISOString,
+  createdAt: TimestampReferenceCodec,
+  updatedAt: TimestampReferenceCodec,
 });
 
 export { timetableCodec };
