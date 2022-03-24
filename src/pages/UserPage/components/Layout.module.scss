@@ -19,6 +19,10 @@
     background-color: #777;
     border-radius: 5px;
     padding: 1px 4px 2px 4px;
+
+    &:not(:last-child) {
+      margin-right: 4px;
+    }
   }
 
   &:not(:last-child) {

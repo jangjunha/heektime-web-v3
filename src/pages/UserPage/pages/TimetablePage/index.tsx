@@ -68,6 +68,16 @@ const Content = (): React.ReactElement => {
       <Link to={location.pathname}>
         {timetable.title || '시간표'}
         &nbsp;&nbsp;
+        {timetable.visibility === 'public' && (
+          <span className={layoutStyles.badge} aria-label="공개">
+            🌏
+          </span>
+        )}
+        {timetable.visibility === 'private' && (
+          <span className={layoutStyles.badge} aria-label="비공개">
+            🔒
+          </span>
+        )}
         {semester && (
           <span className={layoutStyles.badge}>
             {semester.year}년 {semester.term}
@@ -89,12 +99,14 @@ const Content = (): React.ReactElement => {
           />
         }
         detail={
-          <LectureSearch
-            editable={isLoggedInUser}
-            isEditing={isEditing}
-            onClickAddLecture={handleAddLecture}
-            onChangePreviewLecture={handlePreviewLecture}
-          />
+          isLoggedInUser && (
+            <LectureSearch
+              editable={isLoggedInUser}
+              isEditing={isEditing}
+              onClickAddLecture={handleAddLecture}
+              onChangePreviewLecture={handlePreviewLecture}
+            />
+          )
         }
       />
     </Layout>
