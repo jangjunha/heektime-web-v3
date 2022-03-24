@@ -2,7 +2,7 @@ import * as t from 'io-ts';
 import { fromNullable } from 'io-ts-types';
 
 import { lectureTimeCodec } from './lecture-time';
-import { optional } from './utils';
+import { optional, timestampReferenceWithServerDefaultCodec } from './utils';
 
 const metaNotExistingCodec = t.type({
   type: t.literal('not-existing-sample'),
@@ -32,9 +32,19 @@ const masterLectureCodec = t.intersection([
   }),
 ]);
 
-const userLectureCodec = baseLectureCodec;
+const userLectureCodec = t.intersection([
+  baseLectureCodec,
+  t.type({
+    createdAt: timestampReferenceWithServerDefaultCodec,
+    updatedAt: timestampReferenceWithServerDefaultCodec,
+  }),
+]);
 
-export { masterLectureCodec, userLectureCodec };
+export { masterLectureCodec, userLectureCodec, metaTagCodec };
 export type BaseLecture = t.TypeOf<typeof baseLectureCodec>;
 export type MasterLecture = t.TypeOf<typeof masterLectureCodec>;
 export type UserLecture = t.TypeOf<typeof userLectureCodec>;
+export type TypedLecture =
+  | { type: 'master'; lecture: MasterLecture }
+  | { type: 'user'; lecture: UserLecture };
+export type MetaTag = t.TypeOf<typeof metaTagCodec>;

@@ -1,5 +1,11 @@
 export type { Time, Space, LectureTime } from './lecture-time';
-export type { BaseLecture, MasterLecture, UserLecture } from './lecture';
+export type {
+  BaseLecture,
+  MasterLecture,
+  UserLecture,
+  TypedLecture,
+  MetaTag,
+} from './lecture';
 export type { School } from './school';
 export type { Semester, Period } from './semester';
 export type { Timetable } from './timetable';

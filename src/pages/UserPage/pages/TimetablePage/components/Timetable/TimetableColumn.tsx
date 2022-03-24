@@ -112,7 +112,7 @@ export const TimetableColumn = (
         <TimetableItem
           item={item}
           editable={editable}
-          isTimetableEditing={isEditing}
+          isEditing={isEditing}
           onDelete={handleDelete}
         />
       </div>

@@ -17,7 +17,7 @@ interface TimetableProps {
   readonly lectures: [string, UserLecture][];
   readonly editable: boolean;
   readonly isEditing?: boolean;
-  readonly previews?: readonly [string, MasterLecture][];
+  readonly previews?: readonly MasterLecture[];
   onDeleteLecture?: (id: string) => void;
 }
 
@@ -78,7 +78,10 @@ const Timetable = ({
   onDeleteLecture,
 }: TimetableProps): React.ReactElement => {
   const timetableItems = toItems(lectures, false);
-  const previewItems = toItems(previews, true);
+  const previewItems = toItems(
+    previews.map((elem) => [`PREVIEW:${elem.identifier}`, elem]),
+    true
+  );
   const items = [...timetableItems, ...previewItems];
 
   const weekdayItems = (weekday: Weekday): TimetableItemModel[] =>

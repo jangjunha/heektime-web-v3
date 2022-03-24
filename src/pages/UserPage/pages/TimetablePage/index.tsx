@@ -1,10 +1,15 @@
-import { useContext } from 'react';
+import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
+import { useCallback, useContext, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { Loading } from '../../../../components';
 import { LoginContext } from '../../../../contexts/login';
+import { db } from '../../../../firebase';
+import { MasterLecture, UserLecture } from '../../../../types';
+import { userLectureCodec } from '../../../../types/lecture';
 import Layout, { styles as layoutStyles } from '../../components/Layout';
 import { UserContext } from '../../contexts';
+import LectureSearch from './components/LectureSearch';
 import MasterDetail from './components/MasterDetail';
 import Timetable from './components/Timetable';
 import { TimetableContext } from './contexts';
@@ -14,13 +19,49 @@ const Content = (): React.ReactElement => {
   const location = useLocation();
 
   const {
-    timetable: [, timetable],
+    timetable: [timetableID, timetable],
     semester,
   } = useContext(TimetableContext);
   const [userID] = useContext(UserContext);
 
   const [authUser] = useContext(LoginContext);
   const isLoggedInUser = authUser?.uid === userID;
+
+  const [isEditing, setEditing] = useState(false);
+  const [previewLectures, setPreviewLectures] = useState<MasterLecture[]>([]);
+
+  const handleDeleteLecture = useCallback(
+    async (id: string) => {
+      setEditing(true);
+      await deleteDoc(
+        doc(db, 'users', userID, 'timetables', timetableID, 'lectures', id)
+      );
+      setEditing(false);
+    },
+    [userID, timetableID]
+  );
+
+  const handleAddLecture = useCallback(
+    async (master: MasterLecture) => {
+      setEditing(true);
+      const lecture: UserLecture = {
+        ...master,
+        createdAt: null,
+        updatedAt: null,
+      };
+      const data = userLectureCodec.encode(lecture);
+      await addDoc(
+        collection(db, 'users', userID, 'timetables', timetableID, 'lectures'),
+        data
+      );
+      setEditing(false);
+    },
+    [userID, timetableID]
+  );
+
+  const handlePreviewLecture = useCallback((lecture?: MasterLecture) => {
+    setPreviewLectures(lecture != null ? [lecture] : []);
+  }, []);
 
   const breadcrumb = (
     <div className={layoutStyles.breadcrumb}>
@@ -38,7 +79,24 @@ const Content = (): React.ReactElement => {
 
   return (
     <Layout menu={breadcrumb}>
-      <MasterDetail master={<Timetable editable={isLoggedInUser} />} />
+      <MasterDetail
+        master={
+          <Timetable
+            editable={isLoggedInUser}
+            isEditing={isEditing}
+            previews={previewLectures}
+            onDeleteLecture={handleDeleteLecture}
+          />
+        }
+        detail={
+          <LectureSearch
+            editable={isLoggedInUser}
+            isEditing={isEditing}
+            onClickAddLecture={handleAddLecture}
+            onChangePreviewLecture={handlePreviewLecture}
+          />
+        }
+      />
     </Layout>
   );
 };

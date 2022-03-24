@@ -1,11 +1,11 @@
 import * as t from 'io-ts';
 
-import { TimestampReferenceCodec } from './utils';
+import { timestampReferenceWithServerDefaultCodec } from './utils';
 
 const userCodec = t.type({
   username: t.string,
-  createdAt: TimestampReferenceCodec,
-  updatedAt: TimestampReferenceCodec,
+  createdAt: timestampReferenceWithServerDefaultCodec,
+  updatedAt: timestampReferenceWithServerDefaultCodec,
 });
 
 export { userCodec };

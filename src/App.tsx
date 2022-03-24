@@ -18,6 +18,7 @@ const App = (): React.ReactElement => {
           <Route path="sign-in/" element={<SignInPage />} />
           <Route path="sign-out/" element={<SignOutPage />} />
         </Routes>
+        <div id="modal" />
       </LoginProvider>
     </div>
   );

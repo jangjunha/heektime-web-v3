@@ -1,0 +1,101 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .col {
+    padding: 6px 4px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+
+    > p {
+      margin: 0;
+      padding: 0;
+
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  .headerRow,
+  .lectureRow {
+    display: flex;
+    flex-direction: row;
+    padding: 0 4px;
+    box-sizing: border-box;
+
+    .colIdentifier {
+      flex: 3;
+      min-width: 6em;
+
+      @media screen and (max-width: 1024px) and (min-width: 961px) {
+        display: none;
+      }
+    }
+
+    .colTitle {
+      flex: 6;
+    }
+
+    .colProfessor {
+      flex: 3;
+    }
+
+    .colCredit {
+      flex: 1;
+
+      @media screen and (max-width: 1400px) and (min-width: 961px) {
+        display: none;
+      }
+    }
+
+    .colTimes {
+      flex: 4;
+      min-width: 5.5em;
+    }
+
+    .colRoom {
+      flex: 4;
+    }
+  }
+
+  .headerRow {
+    border-bottom: 1px solid #d4d4d4;
+    margin-bottom: 2px;
+
+    .col {
+      font-weight: 600;
+    }
+  }
+
+  .lecturesWrapper {
+    flex: 1;
+    overflow-y: scroll;
+
+    .lectureRow {
+      cursor: pointer;
+      border-bottom: 1px solid #e4e4e4;
+
+      &.colored {
+        // background-color: #f8f8f8;
+      }
+
+      &.overlapped {
+        color: #aaa;
+      }
+
+      &:hover {
+        background-color: #fcfcbb;
+      }
+
+      * {
+        // NOTE: 상위 노드의 onMouseOver가 하위 노드끼리 마우스 이동했을 때도 계속 불리는 문제가 있어서
+        // NOTE: 여러 번 불리지 않도록 하기 위해 이렇게 처리. 지워도 크게 성능이 저하되지는 않음.
+        pointer-events: none;
+      }
+    }
+  }
+}

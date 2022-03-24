@@ -1,0 +1,23 @@
+.container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  padding: 4px;
+
+  .searchWrapper {
+  }
+
+  .resultWrapper {
+    flex: 1;
+    overflow: auto;
+  }
+}
+
+.lectureModalWrapper {
+  width: 480px;
+  padding: 16px;
+}

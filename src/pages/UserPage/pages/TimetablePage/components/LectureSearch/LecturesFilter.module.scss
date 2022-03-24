@@ -1,0 +1,118 @@
+$text-button-background-color: #f4f4f4;
+$text-button-text-color: #aaa;
+$filter-text-button-vertical-padding: 4px;
+$on-color: #48f;
+
+@mixin text-button($horizontal-padding) {
+  background-color: $text-button-background-color;
+  color: $text-button-text-color;
+  border-radius: 1em;
+  padding: $filter-text-button-vertical-padding $horizontal-padding;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($text-button-background-color, 3);
+    color: darken($text-button-text-color, 10);
+  }
+
+  &.on {
+    color: white;
+    background-color: $on-color;
+
+    &:hover {
+      background-color: darken($on-color, 10);
+    }
+  }
+}
+
+.container {
+  // background: #f4f4f4;
+  margin: 4px 0 8px 0;
+
+  ul.filtersWrapper {
+    margin: 0;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: row;
+
+    > li {
+      display: flex;
+
+      margin: 0 12px;
+
+      &:first-child {
+        margin-left: 8px;
+      }
+      &:last-child {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  p.toggleText {
+    margin: 0;
+  }
+
+  .toggleText {
+    font-weight: 900;
+    @include text-button(16px);
+  }
+
+  $searchBox-marginTop: 0px;
+  $searchBox-marginBottom: 0px;
+
+  .searchWrapper {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+
+    &:after {
+      font-family: 'Material Icons';
+      font-size: 24px;
+      color: #aaa;
+      content: '\e8b6';
+      position: absolute;
+      left: 6px;
+      top: calc(50% + #{($searchBox-marginTop - $searchBox-marginBottom) / 2});
+      transform: translateY(-50%);
+      z-index: -1;
+    }
+
+    &.searching:after {
+      content: '\e88c';
+      color: $on-color;
+    }
+  }
+
+  .searchBox {
+    width: 100%;
+    padding: 8px 8px 8px 36px;
+    background-color: transparent;
+    border: none;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e0e0e0;
+    margin: $searchBox-marginTop 0 $searchBox-marginBottom 0;
+    font-size: 12pt;
+
+    &::placeholder {
+      color: #999;
+    }
+  }
+}
+
+.weekdaysFilter {
+  margin-left: 8px;
+  list-style-type: none;
+  padding: 0;
+
+  > li {
+    display: inline-block;
+    margin: 0;
+    font-weight: 600;
+    @include text-button(8px);
+
+    &:not(:first-child) {
+      margin-left: 3px;
+    }
+  }
+}

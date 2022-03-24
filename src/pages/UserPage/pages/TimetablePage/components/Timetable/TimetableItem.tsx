@@ -9,13 +9,13 @@ interface TimetableItemProps {
   editable?: boolean;
   onDelete?: () => void;
 
-  readonly isTimetableEditing?: boolean;
+  readonly isEditing?: boolean;
 }
 
 export const TimetableItem = (
   props: TimetableItemProps
 ): React.ReactElement => {
-  const { item, editable = false, isTimetableEditing = false } = props;
+  const { item, editable = false, isEditing = false } = props;
 
   const handleClickDelete = (): void => {
     if (window.confirm('정말 삭제하시겠습니까?') && props.onDelete) {
@@ -27,9 +27,9 @@ export const TimetableItem = (
     <ul className={styles.overlayMenu}>
       <li>
         <button
-          disabled={isTimetableEditing}
+          disabled={isEditing}
           onClick={handleClickDelete}
-          className={classNames({ [styles.editing]: isTimetableEditing })}
+          className={classNames({ [styles.editing]: isEditing })}
         >
           <i className="material-icons">close</i>
         </button>

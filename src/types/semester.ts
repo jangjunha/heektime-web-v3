@@ -12,7 +12,7 @@ const semesterCodec = t.type({
   year: t.number,
   term: t.string,
   periods: t.array(periodCodec),
-  lecturesURL: optional(t.string),
+  lecturesUrl: optional(t.string),
 });
 
 export { periodCodec, semesterCodec };
