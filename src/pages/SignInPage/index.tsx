@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { Loading } from '../../components';
 import Layout from '../../components/Layout';
 import { auth } from '../../firebase';
 import styles from './index.module.scss';
@@ -10,6 +11,7 @@ import styles from './index.module.scss';
 const LEGACY_USER_EMAIL_DOMAIN = 'user.heektime.heek.kr';
 
 const SignInPage = (): React.ReactElement => {
+  const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const [email, setEmail] = useState('');
@@ -27,6 +29,16 @@ const SignInPage = (): React.ReactElement => {
     setPassword(e.target.value);
   };
   const handleClickSubmit = async (): Promise<void> => {
+    if (email === '') {
+      setErrorMessage('이메일을 입력하세요.');
+      return;
+    }
+    if (password === '') {
+      setErrorMessage('비밀번호를 입력하세요.');
+      return;
+    }
+
+    setLoading(true);
     const signInEmail = email.includes('@')
       ? email
       : `${email}@${LEGACY_USER_EMAIL_DOMAIN}`;
@@ -49,6 +61,7 @@ const SignInPage = (): React.ReactElement => {
             `로그인 시도 중 알 수 없는 오류가 발생했습니다. ${err.code}`
           );
       }
+      setLoading(false);
       return;
     }
     navigate(searchParams.get('redirect') || '/');
@@ -62,15 +75,37 @@ const SignInPage = (): React.ReactElement => {
 
   return (
     <Layout>
-      {errorMessage != null && <p>{errorMessage}</p>}
-      <input type="email" value={email} onChange={handleChangeEmail} />
-      <input
-        type="password"
-        value={password}
-        onChange={handleChangePassword}
-        onKeyDown={handleKeyDown}
-      />
-      <button onClick={handleClickSubmit}>Sign-In</button>
+      <div className={styles.container}>
+        <h2>로그인</h2>
+
+        <div className={styles.form}>
+          <label>
+            <span className={styles.label}>이메일 (또는 구.ID)</span>
+            <input type="email" value={email} onChange={handleChangeEmail} />
+          </label>
+          <label>
+            <span className={styles.label}>비밀번호</span>
+            <input
+              type="password"
+              value={password}
+              onChange={handleChangePassword}
+              onKeyDown={handleKeyDown}
+            />
+          </label>
+          <button
+            className={styles.primary}
+            disabled={isLoading}
+            onClick={handleClickSubmit}
+          >
+            {isLoading ? <Loading inline /> : '로그인'}
+          </button>
+          {errorMessage != null && (
+            <div className={styles.errorContainer}>
+              <p>{errorMessage}</p>
+            </div>
+          )}
+        </div>
+      </div>
     </Layout>
   );
 };
