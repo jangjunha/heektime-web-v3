@@ -1,0 +1,14 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  section {
+    margin: 32px 0 48px 0;
+  }
+}
+
+@media screen and (max-width: 816px) {
+  .container {
+    margin: 0 8px;
+  }
+}
