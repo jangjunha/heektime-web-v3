@@ -23,7 +23,8 @@ select {
   }
 }
 
-button {
+button,
+a {
   &.primary {
     color: white;
     background-color: #48f;
@@ -36,6 +37,7 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-decoration: none;
     cursor: pointer;
 
     i {
