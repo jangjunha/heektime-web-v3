@@ -81,12 +81,18 @@ const SignInPage = (): React.ReactElement => {
         <div className={styles.form}>
           <label>
             <span className={styles.label}>이메일 (또는 구.ID)</span>
-            <input type="email" value={email} onChange={handleChangeEmail} />
+            <input
+              type="email"
+              placeholder="example@example.com"
+              value={email}
+              onChange={handleChangeEmail}
+            />
           </label>
           <label>
             <span className={styles.label}>비밀번호</span>
             <input
               type="password"
+              placeholder="********"
               value={password}
               onChange={handleChangePassword}
               onKeyDown={handleKeyDown}

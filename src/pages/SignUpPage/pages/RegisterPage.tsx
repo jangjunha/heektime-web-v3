@@ -127,7 +127,7 @@ const RegisterPage = (): React.ReactElement => {
           <span className={styles.label}>비밀번호 (6자 이상)</span>
           <input
             type="password"
-            placeholder="******"
+            placeholder="********"
             className={classNames({
               [styles.invalid]: displayingError?.path === 'password',
             })}
