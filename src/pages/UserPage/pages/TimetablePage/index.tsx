@@ -8,7 +8,7 @@ import { Loading } from '../../../../components';
 import { db } from '../../../../firebase';
 import { Timetable } from '../../../../types';
 import { timetableCodec } from '../../../../types/timetable';
-import Layout from '../../components/Layout';
+import Layout, { styles as layoutStyles } from '../../components/Layout';
 import { UserContext } from '../../contexts';
 import { TimetableContext } from './contexts';
 
@@ -86,9 +86,11 @@ const TimetablePage = (): React.ReactElement => {
         >
           <Layout
             menu={
-              <Link to={location.pathname}>
-                {fetchState.timetable.title || '시간표'}
-              </Link>
+              <div className={layoutStyles.breadcrumb}>
+                <Link to={location.pathname}>
+                  {fetchState.timetable.title || '시간표'}
+                </Link>
+              </div>
             }
           >
             제목: {fetchState.timetable.title}

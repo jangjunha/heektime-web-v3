@@ -1,0 +1,30 @@
+.breadcrumbContainer {
+  display: flex;
+  margin-left: 20px;
+}
+
+.breadcrumb {
+  a {
+    color: #888;
+    text-decoration: none;
+
+    &:hover {
+      color: #222;
+    }
+  }
+
+  &:not(:last-child) {
+    &::after {
+      content: '〉';
+      color: #ddd;
+      font-weight: 900;
+      margin: 0 12px;
+    }
+  }
+
+  &:last-child {
+    a {
+      color: #222;
+    }
+  }
+}
