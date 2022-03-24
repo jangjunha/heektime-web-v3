@@ -1,0 +1,12 @@
+$header-height: 28px;
+
+.row {
+  display: flex;
+}
+
+.headerRow {
+  height: $header-height;
+
+  align-items: center;
+  justify-content: center;
+}

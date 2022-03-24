@@ -1,0 +1,39 @@
+@import './common.module.scss';
+
+.container {
+  display: flex;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+
+  .wrapper {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+
+    .timetable {
+      box-sizing: border-box;
+      border: 1px solid $grid-color;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      min-height: 600px;
+      // overflow: hidden;
+
+      font-size: 10pt;
+
+      .col {
+        flex: 1;
+
+        &:not(:first-child) {
+          border-left: 1px solid $grid-color;
+        }
+
+        &.header {
+          max-width: 40px;
+        }
+      }
+    }
+  }
+}

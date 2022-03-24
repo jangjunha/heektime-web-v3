@@ -1,0 +1,52 @@
+@import './common.module.scss';
+
+.col {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  // &:not(:first-child) {
+  //   border-left: 1px solid $grid-color;
+  // }
+
+  .timetableItem {
+    position: absolute;
+    box-sizing: border-box;
+    margin: -1px;
+    z-index: 1;
+  }
+
+  .timesWrapper {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .rowTime {
+      flex: 1;
+      border-top: 1px solid $grid-color;
+
+      > * {
+        display: block;
+        text-align: right;
+        margin-right: 8px;
+      }
+    }
+
+    .itemsWrapper {
+      top: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      margin-top: 1px;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.headerCol {
+  .row {
+    justify-content: flex-end;
+  }
+}

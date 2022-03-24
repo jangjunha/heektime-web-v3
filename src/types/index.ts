@@ -4,8 +4,8 @@ export type { School } from './school';
 export type { Semester, Period } from './semester';
 export type { Timetable } from './timetable';
 export type { User } from './user';
-export type {
-  Weekday,
+export type { Weekday } from './weekday';
+export {
   allWeekdaysFromMonday,
   toShortName,
   toLocalizedShortName,
