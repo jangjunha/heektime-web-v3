@@ -18,7 +18,7 @@ const SignOutPage = (): React.ReactElement => {
 
   const handleClick = async (): Promise<void> => {
     await signOut(auth);
-    navigate('/');
+    navigate('/', { replace: true });
   };
 
   if (isState(location.state) && location.state.skipModal) {
