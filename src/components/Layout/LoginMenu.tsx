@@ -1,11 +1,16 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, resolvePath, useLocation } from 'react-router-dom';
 
 import { LoginContext } from '../../contexts/login';
 import styles from './LoginMenu.module.scss';
 
 const LoginMenu = (): React.ReactElement => {
   const [authUser, user] = useContext(LoginContext);
+
+  const location = useLocation();
+  const search = new URLSearchParams({
+    redirect: `${location.pathname}${location.search}${location.hash}`,
+  });
 
   return (
     <div className={styles.wrapper}>
@@ -27,7 +32,13 @@ const LoginMenu = (): React.ReactElement => {
           </Link>
         </>
       ) : (
-        <Link to="/sign-in/" className={styles.actionLink}>
+        <Link
+          to={resolvePath(
+            { pathname: '/sign-in/', search: search.toString() },
+            '/'
+          )}
+          className={styles.actionLink}
+        >
           로그인
         </Link>
       )}

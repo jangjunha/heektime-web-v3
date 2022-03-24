@@ -1,7 +1,7 @@
 import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import Layout from '../components/Layout';
 import { auth } from '../firebase';
@@ -14,6 +14,7 @@ const SignInPage = (): React.ReactElement => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -49,8 +50,7 @@ const SignInPage = (): React.ReactElement => {
       }
       return;
     }
-
-    navigate('/');
+    navigate(searchParams.get('redirect') || '/');
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent): Promise<void> => {
