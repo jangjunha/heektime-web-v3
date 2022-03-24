@@ -1,0 +1,72 @@
+$invalid-color: #f44;
+
+.timetableID {
+  display: none;
+}
+
+.container {
+  .content {
+    max-width: 600px;
+    margin: 32px auto;
+
+    h1 {
+      font-weight: 900;
+    }
+
+    .formGroup {
+      .formItem {
+        width: 100%;
+        font-size: 18px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        margin: 8px 0;
+        padding: 12px 16px;
+        border-radius: 0;
+        font-weight: 500;
+        line-height: 140%;
+
+        &.invalid {
+          color: $invalid-color;
+          border-bottom: 1px solid lighten($invalid-color, 10);
+
+          &::placeholder {
+            color: $invalid-color;
+          }
+        }
+      }
+
+      margin-bottom: 48px;
+    }
+
+    input[type='text'] {
+      color: black;
+    }
+
+    select {
+      appearance: none;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='rgb(120, 120, 120)' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3C/svg%3E")
+        no-repeat;
+      background-position: calc(100% - 8px);
+    }
+
+    .add {
+      width: 100%;
+      background-color: #48f;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 12px;
+      border: none;
+      border-radius: 2em;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(#48f, 5);
+      }
+
+      &:disabled {
+        background-color: #ddd;
+      }
+    }
+  }
+}

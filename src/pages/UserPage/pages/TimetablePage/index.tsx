@@ -41,7 +41,10 @@ const useTimetable = (userID: string, timetableID: string): FetchState => {
 
       const data = pipe(
         timetableCodec.decode(snapshot.data()),
-        fold(console.error, identity)
+        fold((errors) => {
+          console.error(errors);
+          throw new Error('decode error');
+        }, identity)
       );
       if (data == null) {
         setFetchState({

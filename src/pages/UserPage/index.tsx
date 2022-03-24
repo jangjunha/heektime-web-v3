@@ -14,6 +14,7 @@ import { Loading } from '../../components';
 import { db } from '../../firebase';
 import { User, userCodec } from '../../types/user';
 import { UserContext } from './contexts';
+import CreateTimetablePage from './pages/CreateTimetablePage';
 import IndexPage from './pages/IndexPage';
 import TimetablePage from './pages/TimetablePage';
 
@@ -53,7 +54,10 @@ const useUser = (username: string): FetchState => {
       const doc = querySnapshot.docs[0];
       const data = pipe(
         userCodec.decode(doc.data()),
-        fold(console.error, identity)
+        fold((errors) => {
+          console.error(errors);
+          throw new Error('decode error');
+        }, identity)
       );
       if (data == null) {
         setFetchState({
@@ -93,6 +97,10 @@ const UserPage = (): React.ReactElement => {
           <Routes>
             <Route path="/" element={<Wrapper basePath={basePath.pathname} />}>
               <Route index element={<IndexPage />} />
+              <Route
+                path="create-timetable/"
+                element={<CreateTimetablePage />}
+              />
               <Route path="timetable/:id/" element={<TimetablePage />} />
             </Route>
           </Routes>

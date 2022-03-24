@@ -7,7 +7,11 @@ const CHAR = '\u{1F3C3}';
 const INTERVAL = 200;
 const MAXLENGTH = 8;
 
-const Loading = (): React.ReactElement => {
+const Loading = ({
+  inline = false,
+}: {
+  inline?: boolean;
+}): React.ReactElement => {
   const [chars, setChars] = useState(
     Array(MAXLENGTH)
       .fill('')
@@ -26,7 +30,9 @@ const Loading = (): React.ReactElement => {
     return (): void => clearInterval(timerID);
   }, []);
 
-  return (
+  return inline ? (
+    <>{chars}</>
+  ) : (
     <div className={styles.container}>
       <p>{chars}</p>
     </div>

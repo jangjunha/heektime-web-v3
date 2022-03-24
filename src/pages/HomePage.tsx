@@ -5,14 +5,16 @@ import Layout from '../components/Layout';
 import { LoginContext } from '../contexts/login';
 
 const HomePage = (): React.ReactElement => {
-  const [authUser] = useContext(LoginContext);
+  const [authUser, user] = useContext(LoginContext);
   return (
     <Layout>
       Home
       <div>
         {authUser != null ? (
           <>
-            <p>{authUser.uid}</p>
+            {user != null && (
+              <Link to={`/user/${user.username}`}>내 시간표 보러가기</Link>
+            )}
             <Link to="sign-out" state={{ skipModal: true }}>
               Sign-Out
             </Link>

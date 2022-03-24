@@ -37,7 +37,13 @@ const LoginProvider = ({
       return;
     }
     return onSnapshot(doc(db, 'users', authUser.uid), (doc) => {
-      pipe(userCodec.decode(doc.data()), fold(console.error, setUser));
+      pipe(
+        userCodec.decode(doc.data()),
+        fold((errors) => {
+          console.error(errors);
+          throw new Error('decode error');
+        }, setUser)
+      );
     });
   }, [authUser]);
 
