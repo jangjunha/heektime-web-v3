@@ -6,6 +6,7 @@ import { LoginProvider } from './contexts/login';
 import HomePage from './pages/HomePage';
 import SignInPage from './pages/SignInPage';
 import SignOutPage from './pages/SignOutPage';
+import SignUpPage from './pages/SignUpPage';
 import UserPage from './pages/UserPage';
 
 const App = (): React.ReactElement => {
@@ -15,6 +16,7 @@ const App = (): React.ReactElement => {
         <Routes>
           <Route index element={<HomePage />} />
           <Route path="user/:username/*" element={<UserPage />} />
+          <Route path="sign-up/*" element={<SignUpPage />} />
           <Route path="sign-in/" element={<SignInPage />} />
           <Route path="sign-out/" element={<SignOutPage />} />
         </Routes>

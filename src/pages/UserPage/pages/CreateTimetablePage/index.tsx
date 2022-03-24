@@ -179,17 +179,12 @@ const CreateTimetablePage = (): React.ReactElement => {
       <div className={styles.formGroup}>
         <input
           type="text"
-          className={styles.formItem}
           placeholder="시간표 이름"
           value={title}
           onChange={handleChangeTitle}
         />
 
-        <select
-          className={styles.formItem}
-          value={selectedSchoolID ?? ''}
-          onChange={handleSelectSchool}
-        >
+        <select value={selectedSchoolID ?? ''} onChange={handleSelectSchool}>
           <option
             value=""
             disabled={true}
@@ -202,7 +197,6 @@ const CreateTimetablePage = (): React.ReactElement => {
         </select>
 
         <select
-          className={styles.formItem}
           value={selectedSemesterID ?? ''}
           onChange={handleSelectSemester}
         >

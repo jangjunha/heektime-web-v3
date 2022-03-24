@@ -1,4 +1,4 @@
-$invalid-color: #f44;
+@import '../../../../global.module.scss';
 
 .timetableID {
   display: none;
@@ -14,27 +14,6 @@ $invalid-color: #f44;
     }
 
     .formGroup {
-      .formItem {
-        width: 100%;
-        font-size: 18px;
-        border: none;
-        border-bottom: 1px solid #ddd;
-        margin: 8px 0;
-        padding: 12px 16px;
-        border-radius: 0;
-        font-weight: 500;
-        line-height: 140%;
-
-        &.invalid {
-          color: $invalid-color;
-          border-bottom: 1px solid lighten($invalid-color, 10);
-
-          &::placeholder {
-            color: $invalid-color;
-          }
-        }
-      }
-
       margin-bottom: 48px;
     }
 

@@ -32,15 +32,26 @@ const LoginMenu = (): React.ReactElement => {
           </Link>
         </>
       ) : (
-        <Link
-          to={resolvePath(
-            { pathname: '/sign-in/', search: search.toString() },
-            '/'
-          )}
-          className={styles.actionLink}
-        >
-          로그인
-        </Link>
+        <>
+          <Link
+            to={resolvePath(
+              { pathname: '/sign-up/', search: search.toString() },
+              '/'
+            )}
+            className={styles.actionLink}
+          >
+            회원가입
+          </Link>
+          <Link
+            to={resolvePath(
+              { pathname: '/sign-in/', search: search.toString() },
+              '/'
+            )}
+            className={styles.actionLink}
+          >
+            로그인
+          </Link>
+        </>
       )}
     </div>
   );

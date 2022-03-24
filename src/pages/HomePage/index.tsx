@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import Layout from '../components/Layout';
-import { LoginContext } from '../contexts/login';
+import Layout from '../../components/Layout';
+import { LoginContext } from '../../contexts/login';
 
 const HomePage = (): React.ReactElement => {
   const [authUser, user] = useContext(LoginContext);

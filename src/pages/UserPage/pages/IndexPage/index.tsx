@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import {
   DocumentData,
   DocumentReference,
@@ -417,7 +418,7 @@ const IndexPageContent = (): React.ReactElement => {
         <div className={styles.container}>
           {isLoggedInUser && (
             <Link to={`create-timetable/`}>
-              <button className={styles.btnNew}>
+              <button className={classNames(styles.primary, styles.btnNew)}>
                 <i className="material-icons">add</i> 새 시간표 만들기
               </button>
             </Link>

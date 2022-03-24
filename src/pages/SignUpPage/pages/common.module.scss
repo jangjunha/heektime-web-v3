@@ -1,0 +1,38 @@
+@import '../../../global.module.scss';
+
+.container {
+  max-width: 600px;
+  margin: 32px auto;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 11pt;
+        font-weight: 600;
+        color: #444;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 32px;
+      }
+    }
+  }
+
+  .errorContainer {
+    p {
+      margin: 0 0 4px 0;
+      font-size: 11pt;
+
+      &::before {
+        content: '☹️';
+        margin-right: 6px;
+      }
+    }
+  }
+}

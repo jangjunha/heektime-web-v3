@@ -3,8 +3,9 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import Layout from '../components/Layout';
-import { auth } from '../firebase';
+import Layout from '../../components/Layout';
+import { auth } from '../../firebase';
+import styles from './index.module.scss';
 
 const LEGACY_USER_EMAIL_DOMAIN = 'user.heektime.heek.kr';
 

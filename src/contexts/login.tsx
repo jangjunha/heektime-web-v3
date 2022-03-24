@@ -3,6 +3,7 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { fold } from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Loading } from '../components';
 import { auth, db } from '../firebase';
@@ -22,10 +23,12 @@ type LoginProviderProps = {
 const LoginProvider = ({
   children,
 }: LoginProviderProps): React.ReactElement => {
+  const navigate = useNavigate();
+
   const [authUser, setAuthUser] = useState<AuthUser | null | undefined>(
     auth.currentUser || undefined
   );
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, setAuthUser);
@@ -37,6 +40,10 @@ const LoginProvider = ({
       return;
     }
     return onSnapshot(doc(db, 'users', authUser.uid), (doc) => {
+      if (!doc.exists()) {
+        setUser(undefined);
+        return;
+      }
       pipe(
         userCodec.decode(doc.data()),
         fold((errors) => {
@@ -47,10 +54,16 @@ const LoginProvider = ({
     });
   }, [authUser]);
 
+  useEffect(() => {
+    if (authUser !== null && user === undefined) {
+      navigate('/sign-up/create-user-info/');
+    }
+  }, [authUser, user, navigate]);
+
   return authUser === undefined ? (
     <Loading />
   ) : (
-    <BaseProvider value={[authUser, user]}>{children}</BaseProvider>
+    <BaseProvider value={[authUser, user ?? null]}>{children}</BaseProvider>
   );
 };
 
