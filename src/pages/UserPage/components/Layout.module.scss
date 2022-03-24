@@ -13,6 +13,14 @@
     }
   }
 
+  .badge {
+    color: white;
+    font-size: 14px;
+    background-color: #777;
+    border-radius: 5px;
+    padding: 1px 4px 2px 4px;
+  }
+
   &:not(:last-child) {
     &::after {
       content: '〉';

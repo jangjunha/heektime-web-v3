@@ -1,7 +1,8 @@
 import { createContext } from 'react';
 
-import { Timetable } from '../../../../types';
+import { Semester, Timetable } from '../../../../types';
 
-export const TimetableContext = createContext<[string, Timetable]>(
-  undefined as never
-);
+export const TimetableContext = createContext<{
+  timetable: [string, Timetable];
+  semester?: Semester;
+}>(undefined as never);
