@@ -16,8 +16,15 @@ import {
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
 import { produce } from 'immer';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Link, resolvePath } from 'react-router-dom';
 
 import { Loading } from '../../../../components';
 import { LoginContext } from '../../../../contexts/login';
@@ -26,8 +33,10 @@ import { School, Semester, Timetable } from '../../../../types';
 import { schoolCodec } from '../../../../types/school';
 import { semesterCodec } from '../../../../types/semester';
 import { timetableCodec } from '../../../../types/timetable';
+import { variate } from '../../../../utils/emoji';
 import Layout from '../../components/Layout';
 import { UserContext } from '../../contexts';
+import styles from './index.module.scss';
 
 type SchoolFetchState =
   | { stage: 'requested' }
@@ -55,8 +64,8 @@ type FetchState =
 
 type SemesterState = {
   path: string;
-  school?: School;
-  semester?: Semester;
+  school: [string, School?];
+  semester: [string, Semester?];
   timetables: [string, Timetable][];
 };
 
@@ -311,20 +320,28 @@ const useGroupedTimetables = (
           group,
           ([, { ref, timetables }]) => {
             const schoolRef = ref.parent.parent;
+            if (schoolRef === null) {
+              throw new Error('Cannot resolve school ref');
+            }
+
             const schoolState: SchoolFetchState | undefined =
-              schoolRef != null ? schools[schoolRef.id] : undefined;
+              schools[schoolRef.id];
             const semesterState: SemesterFetchState | undefined =
               semesters[ref.path];
             return {
               path: ref.path,
-              school:
+              school: [
+                schoolRef.id,
                 schoolState?.stage === 'fetched'
                   ? schoolState.school
                   : undefined,
-              semester:
+              ],
+              semester: [
+                ref.id,
                 semesterState?.stage === 'fetched'
                   ? semesterState.semester
                   : undefined,
+              ],
               timetables,
             };
           }
@@ -339,14 +356,55 @@ const useGroupedTimetables = (
   }, [isLoading, fetchState, loadNext, schools, semesters]);
 };
 
+const EmptyDataset = ({
+  isLoggedInUser,
+}: {
+  isLoggedInUser: boolean;
+}): React.ReactElement => (
+  <div className={styles.emptyDataSet}>
+    <p className={styles.emoji}>{variate('\u{1F645}')}</p>
+    <p className={styles.message}>
+      <strong>아직 만들어진 시간표가 없어요.</strong>
+      {isLoggedInUser && (
+        <>
+          <br />새 시간표를 만들어보세요.
+        </>
+      )}
+    </p>
+  </div>
+);
+
 const IndexPageContent = (): React.ReactElement => {
   const [id] = useContext(UserContext);
   const [authUser] = useContext(LoginContext);
+  const isLoggedInUser = authUser?.uid != null && id === authUser.uid;
+  const loadMoreRef = useRef<HTMLButtonElement>(null);
 
   const [isLoading, groupedState, loadNext] = useGroupedTimetables(
     id,
     id === authUser?.uid
   );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting) {
+          loadNext();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '64px',
+        threshold: 0,
+      }
+    );
+    if (loadMoreRef.current != null) {
+      observer.observe(loadMoreRef.current);
+    }
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadNext, loadMoreRef.current]);
 
   switch (groupedState.stage) {
     case 'initial':
@@ -356,32 +414,73 @@ const IndexPageContent = (): React.ReactElement => {
     case 'paging':
     case 'finish':
       return (
-        <>
-          <Link to="create-timetable/">새 시간표 만들기</Link>
-          <ul>
-            {groupedState.semesters.map((group) => (
-              <li key={group.path}>
-                <p>
-                  {group.school != null && group.school.name}{' '}
-                  {group.semester != null &&
-                    `${group.semester.year}년 ${group.semester.term}`}
-                </p>
-                <ul>
-                  {group.timetables.map(([id, timetable]) => (
-                    <li key={id}>
-                      <Link to={`timetable/${id}`}>
-                        {timetable.title || '이름 없는 시간표'}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-          {groupedState.stage === 'paging' && !isLoading && (
-            <button onClick={loadNext}>더 불러오기</button>
+        <div className={styles.container}>
+          {isLoggedInUser && (
+            <Link to={`create-timetable/`}>
+              <button className={styles.btnNew}>
+                <i className="material-icons">add</i> 새 시간표 만들기
+              </button>
+            </Link>
           )}
-        </>
+          {groupedState.semesters.length === 0 ? (
+            <EmptyDataset isLoggedInUser={isLoggedInUser} />
+          ) : (
+            <>
+              <ul className={styles.sectionsContainer}>
+                {groupedState.semesters.map((group) => {
+                  const [schoolID, school] = group.school;
+                  const [semesterID, semester] = group.semester;
+                  return (
+                    <li key={group.path}>
+                      <div className={styles.semesterHeader}>
+                        <h2 className={styles.semesterTitle}>
+                          {school != null && school.name}{' '}
+                          {semester != null &&
+                            `${semester.year}년 ${semester.term}`}
+                        </h2>
+                        {isLoggedInUser && (
+                          <Link
+                            to={resolvePath(
+                              {
+                                pathname: 'create-timetable/',
+                                search: new URLSearchParams({
+                                  schoolID,
+                                  semesterID,
+                                }).toString(),
+                              },
+                              './'
+                            )}
+                            className={styles.semesterAddButton}
+                          >
+                            <i className="material-icons">add</i>
+                          </Link>
+                        )}
+                      </div>
+                      <ul className={styles.timetablesContainer}>
+                        {group.timetables.map(([id, timetable]) => (
+                          <li key={id}>
+                            <Link
+                              to={`timetable/${id}`}
+                              className={styles.timetableContent}
+                            >
+                              {timetable.title || '이름 없는 시간표'}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  );
+                })}
+              </ul>
+              {groupedState.stage === 'paging' && !isLoading && (
+                <button ref={loadMoreRef} onClick={loadNext}>
+                  더 불러오기
+                </button>
+              )}
+              {isLoading && <Loading />}
+            </>
+          )}
+        </div>
       );
   }
 };

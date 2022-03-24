@@ -8,7 +8,7 @@ import {
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { Loading } from '../../../../components';
@@ -48,13 +48,13 @@ const useSchools = (): [string, School][] | undefined => {
 };
 
 const useSemesters = (
-  schoolID: string | undefined
+  schoolID: string | null
 ): [string, Semester][] | undefined => {
   const [semesters, setSemesters] = useState<[string, Semester][]>();
 
   useEffect(() => {
     const fetch = async (): Promise<void> => {
-      if (schoolID === undefined) {
+      if (schoolID === null) {
         setSemesters([]);
         return;
       }
@@ -95,13 +95,22 @@ const CreateTimetablePage = (): React.ReactElement => {
   const [isLoading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
 
-  const schools = useSchools();
-  const [selectedSchoolID, setSelectedSchoolID] = useState(
-    window.localStorage.getItem(RECENT_SCHOOL_ID_KEY) || ''
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedSchoolID = searchParams.get('schoolID') || null;
+  const selectedSemesterID = searchParams.get('semesterID') || null;
+  const setSelectedSchoolID = (id: string | null): void =>
+    setSearchParams({ ...searchParams, schoolID: id ?? '' });
+  const setSelectedSemesterID = (id: string | null): void =>
+    setSearchParams({ ...searchParams, semesterID: id ?? '' });
 
+  useEffect(() => {
+    const recentSchoolID = window.localStorage.getItem(RECENT_SCHOOL_ID_KEY);
+    setSelectedSchoolID(recentSchoolID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const schools = useSchools();
   const semesters = useSemesters(selectedSchoolID);
-  const [selectedSemesterID, setSelectedSemesterID] = useState<string>();
 
   const schoolOptions =
     schools != null &&
@@ -130,7 +139,7 @@ const CreateTimetablePage = (): React.ReactElement => {
   ): void => {
     const value = event.target.value;
     setSelectedSchoolID(value);
-    setSelectedSemesterID(undefined);
+    setSelectedSemesterID(null);
     window.localStorage.setItem(RECENT_SCHOOL_ID_KEY, value);
   };
 
@@ -142,8 +151,8 @@ const CreateTimetablePage = (): React.ReactElement => {
   };
 
   const handleClickSubmit = async (): Promise<void> => {
-    if (selectedSemesterID == null) {
-      console.warn('Semester is not selected');
+    if (selectedSchoolID == null || selectedSemesterID == null) {
+      console.warn('School or Semester is not selected');
       return;
     }
     setLoading(true);
@@ -182,7 +191,7 @@ const CreateTimetablePage = (): React.ReactElement => {
 
         <select
           className={styles.formItem}
-          value={selectedSchoolID}
+          value={selectedSchoolID ?? ''}
           onChange={handleSelectSchool}
         >
           <option
@@ -198,7 +207,7 @@ const CreateTimetablePage = (): React.ReactElement => {
 
         <select
           className={styles.formItem}
-          value={selectedSemesterID || ''}
+          value={selectedSemesterID ?? ''}
           onChange={handleSelectSemester}
         >
           <option
