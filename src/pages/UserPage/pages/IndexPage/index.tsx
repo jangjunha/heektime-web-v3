@@ -444,8 +444,8 @@ const IndexPageContent = (): React.ReactElement => {
                               {
                                 pathname: 'create-timetable/',
                                 search: new URLSearchParams({
-                                  schoolID,
-                                  semesterID,
+                                  school: schoolID,
+                                  semester: semesterID,
                                 }).toString(),
                               },
                               './'

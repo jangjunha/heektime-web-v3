@@ -96,18 +96,15 @@ const CreateTimetablePage = (): React.ReactElement => {
   const [title, setTitle] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedSchoolID = searchParams.get('schoolID') || null;
-  const selectedSemesterID = searchParams.get('semesterID') || null;
-  const setSelectedSchoolID = (id: string | null): void =>
-    setSearchParams({ ...searchParams, schoolID: id ?? '' });
-  const setSelectedSemesterID = (id: string | null): void =>
-    setSearchParams({ ...searchParams, semesterID: id ?? '' });
+  const selectedSchoolID = searchParams.get('school') || null;
+  const selectedSemesterID = searchParams.get('semester') || null;
 
   useEffect(() => {
     const recentSchoolID = window.localStorage.getItem(RECENT_SCHOOL_ID_KEY);
-    setSelectedSchoolID(recentSchoolID);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (recentSchoolID) {
+      setSearchParams({ school: recentSchoolID });
+    }
+  }, [setSearchParams]);
 
   const schools = useSchools();
   const semesters = useSemesters(selectedSchoolID);
@@ -138,8 +135,7 @@ const CreateTimetablePage = (): React.ReactElement => {
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     const value = event.target.value;
-    setSelectedSchoolID(value);
-    setSelectedSemesterID(null);
+    setSearchParams({ school: value, semester: '' });
     window.localStorage.setItem(RECENT_SCHOOL_ID_KEY, value);
   };
 
@@ -147,7 +143,7 @@ const CreateTimetablePage = (): React.ReactElement => {
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     const value = event.target.value;
-    setSelectedSemesterID(value);
+    setSearchParams({ school: selectedSchoolID ?? '', semester: value });
   };
 
   const handleClickSubmit = async (): Promise<void> => {
