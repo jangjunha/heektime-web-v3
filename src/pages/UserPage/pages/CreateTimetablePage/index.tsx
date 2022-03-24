@@ -7,9 +7,9 @@ import {
 } from 'firebase/firestore';
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
+import { nanoid } from 'nanoid';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { v4 as UUIDv4 } from 'uuid';
 
 import { Loading } from '../../../../components';
 import { db } from '../../../../firebase';
@@ -91,7 +91,7 @@ const CreateTimetablePage = (): React.ReactElement => {
   const navigate = useNavigate();
   const [userID] = useContext(UserContext);
 
-  const [timetableID] = useState(UUIDv4());
+  const [timetableID] = useState(nanoid(10));
   const [isLoading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
 
