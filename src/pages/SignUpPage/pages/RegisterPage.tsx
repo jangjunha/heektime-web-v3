@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { Loading } from '../../../components';
@@ -140,6 +140,14 @@ const RegisterPage = (): React.ReactElement => {
             <Error>{displayingError.message}</Error>
           )}
         </label>
+
+        <p>
+          버튼을 눌러 가입하면{' '}
+          <Link to="/policy/" target="_blank">
+            서비스 정책 및 이용약관
+          </Link>
+          에 동의하는 것입니다.
+        </p>
         <button
           className={styles.primary}
           disabled={disabled}
