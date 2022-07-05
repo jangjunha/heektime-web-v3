@@ -1,8 +1,11 @@
 import { FirebaseError } from 'firebase/app';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithCustomToken } from 'firebase/auth';
+import { fold } from 'fp-ts/lib/Either';
+import { identity, pipe } from 'fp-ts/lib/function';
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { login } from '../../apis/auth-service';
 import { Loading } from '../../components';
 import Layout from '../../components/Layout';
 import { auth } from '../../firebase';
@@ -43,24 +46,37 @@ const SignInPage = (): React.ReactElement => {
       ? email
       : `${email}@${LEGACY_USER_EMAIL_DOMAIN}`;
 
+    const token = pipe(
+      await login(signInEmail, password),
+      fold((error) => {
+        switch (error.type) {
+          case 'invalid-credentials':
+            setErrorMessage('이메일 혹은 비밀번호가 잘못됐습니다.');
+            break;
+          case 'unexpected':
+            setErrorMessage(
+              `알 수 없는 오류가 발생했습니다. 계속되면 heektime@heek.kr 로 문의 부탁드립니다.`
+            );
+            break;
+        }
+        return null;
+      }, identity)
+    );
+    if (token == null) {
+      setLoading(false);
+      return;
+    }
+
     try {
-      await signInWithEmailAndPassword(auth, signInEmail, password);
+      await signInWithCustomToken(auth, token);
     } catch (err) {
       if (!(err instanceof FirebaseError)) {
         throw err;
       }
-      switch (err.code) {
-        case 'auth/user-not-found':
-          setErrorMessage('사용자를 찾을 수 없습니다.');
-          break;
-        case 'auth/wrong-password':
-          setErrorMessage('잘못된 비밀번호입니다.');
-          break;
-        default:
-          setErrorMessage(
-            `로그인 시도 중 알 수 없는 오류가 발생했습니다. ${err.code}`
-          );
-      }
+      // TODO: Unexpected
+      setErrorMessage(
+        `로그인 시도 중 알 수 없는 오류가 발생했습니다. ${err.code}`
+      );
       setLoading(false);
       return;
     }

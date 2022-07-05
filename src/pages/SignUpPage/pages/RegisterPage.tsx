@@ -1,10 +1,13 @@
 import classNames from 'classnames';
 import { FirebaseError } from 'firebase/app';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithCustomToken } from 'firebase/auth';
+import { fold } from 'fp-ts/lib/Either';
+import { identity, pipe } from 'fp-ts/lib/function';
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
+import { login, register } from '../../../apis/auth-service';
 import { Loading } from '../../../components';
 import { auth } from '../../../firebase';
 import styles from './common.module.scss';
@@ -72,23 +75,55 @@ const RegisterPage = (): React.ReactElement => {
     }
 
     setLoading(true);
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      if (!(err instanceof FirebaseError)) {
-        throw err;
-      }
-      switch (err.code) {
-        case 'auth/email-already-in-use':
-          setErrorMessage('이미 사용중인 이메일입니다.');
-          break;
-        default:
-          setErrorMessage(`알 수 없는 오류가 발생했습니다. ${err.code}`);
-      }
+    const registerSucceed = pipe(
+      await register(email, password),
+      fold(
+        (error) => {
+          switch (error.type) {
+            case 'email-already-exists':
+              setErrorMessage('이미 사용중인 이메일입니다.');
+              break;
+            case 'invalid':
+            case 'unexpected':
+              setErrorMessage(
+                `알 수 없는 오류가 발생했습니다. 계속되면 heektime@heek.kr 로 문의 부탁드립니다.`
+              );
+              break;
+          }
+          return false;
+        },
+        () => true
+      )
+    );
+    if (!registerSucceed) {
       setLoading(false);
       return;
     }
 
+    const loginToken = pipe(
+      await login(email, password),
+      fold(() => null, identity)
+    );
+    if (loginToken == null) {
+      // TODO: Unexpected
+      setLoading(false);
+      navigate({ pathname: '/sign-in/', search: searchParams.toString() });
+      return;
+    }
+
+    try {
+      await signInWithCustomToken(auth, loginToken);
+    } catch (err) {
+      if (!(err instanceof FirebaseError)) {
+        throw err;
+      }
+      // TODO: Unexpected
+      setLoading(false);
+      navigate({ pathname: '/sign-in/', search: searchParams.toString() });
+      return;
+    }
+
+    setLoading(false);
     navigate(
       {
         pathname: '../create-user-info/',

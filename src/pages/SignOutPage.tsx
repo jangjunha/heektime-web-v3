@@ -1,5 +1,5 @@
 import { signOut } from 'firebase/auth';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import Layout from '../components/Layout';
@@ -16,14 +16,16 @@ const SignOutPage = (): React.ReactElement => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleClick = async (): Promise<void> => {
+  const handleClick = useCallback(async (): Promise<void> => {
     await signOut(auth);
     navigate('/', { replace: true });
-  };
+  }, [navigate]);
 
-  if (isState(location.state) && location.state.skipModal) {
-    handleClick();
-  }
+  useEffect(() => {
+    if (isState(location.state) && location.state.skipModal) {
+      handleClick();
+    }
+  }, [location.state, handleClick]);
 
   return (
     <Layout>
