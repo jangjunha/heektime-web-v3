@@ -1,7 +1,13 @@
-import { doc, onSnapshot } from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore';
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { db } from '../../../../../firebase';
 import { Timetable } from '../../../../../types';
@@ -55,4 +61,24 @@ export const useTimetable = (
   );
 
   return fetchState;
+};
+
+export const useEditTimetable = (
+  userID: string,
+  timetableID: string
+): {
+  changeVisibility(visibility: 'public' | 'private'): Promise<void>;
+  delete_(): Promise<void>;
+} => {
+  return useMemo(() => {
+    const ref = doc(db, 'users', userID, 'timetables', timetableID);
+    return {
+      async changeVisibility(visibility: 'public' | 'private'): Promise<void> {
+        await updateDoc(ref, { visibility, updatedAt: serverTimestamp() });
+      },
+      async delete_(): Promise<void> {
+        await deleteDoc(ref);
+      },
+    };
+  }, [userID, timetableID]);
 };
