@@ -49,8 +49,9 @@ const Content = (): React.ReactElement => {
   const handleAddLecture = useCallback(
     async (master: MasterLecture) => {
       setEditing(true);
+      const { url, ...rest } = master;
       const lecture: UserLecture = {
-        ...master,
+        ...rest,
         createdAt: null,
         updatedAt: null,
       };
