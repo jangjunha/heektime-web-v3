@@ -1,8 +1,10 @@
 import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
-import { useCallback, useContext, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useCallback, useContext, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { Loading } from '../../../../components';
+import Menu from '../../../../components/Menu';
+import Popover from '../../../../components/Popover';
 import { LoginContext } from '../../../../contexts/login';
 import { db } from '../../../../firebase';
 import { MasterLecture, UserLecture } from '../../../../types';
@@ -13,15 +15,19 @@ import LectureSearch from './components/LectureSearch';
 import MasterDetail from './components/MasterDetail';
 import Timetable from './components/Timetable';
 import { TimetableContext } from './contexts';
+import styles from './index.module.scss';
 import { useLectures, useSemester, useTimetable } from './queries';
+import { useEditTimetable } from './queries/useTimetable';
 
 const Content = (): React.ReactElement => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const {
     timetable: [timetableID, timetable],
   } = useContext(TimetableContext);
   const [userID] = useContext(UserContext);
+  const { changeVisibility, delete_ } = useEditTimetable(userID, timetableID);
 
   const [authUser] = useContext(LoginContext);
   const isLoggedInUser = authUser?.uid === userID;
@@ -81,8 +87,55 @@ const Content = (): React.ReactElement => {
     </div>
   );
 
+  const handleClickMenu = async (key: string): Promise<void> => {
+    switch (key) {
+      case 'change-to-public':
+        menuButtonRef.current?.focus();
+        await changeVisibility('public');
+        break;
+      case 'change-to-private':
+        menuButtonRef.current?.focus();
+        await changeVisibility('private');
+        break;
+      case 'delete':
+        menuButtonRef.current?.focus();
+        await delete_();
+        navigate(`../../`);
+        break;
+    }
+  };
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menu = (
+    <Popover
+      menu={
+        <Menu
+          items={[
+            [
+              'change-to-public',
+              timetable.visibility !== 'public' && <>공개로 전환</>,
+            ],
+            [
+              'change-to-private',
+              timetable.visibility !== 'private' && <>비공개로 전환</>,
+            ],
+            ['delete', <>시간표 삭제</>],
+          ]}
+          onSelectItem={handleClickMenu}
+        />
+      }
+    >
+      <button
+        className={styles.menuButton}
+        aria-label="메뉴"
+        ref={menuButtonRef}
+      >
+        <i className="material-icons">more_vert</i>
+      </button>
+    </Popover>
+  );
+
   return (
-    <Layout breadcrumb={breadcrumb}>
+    <Layout breadcrumb={breadcrumb} menu={menu}>
       <MasterDetail
         master={
           <Timetable
