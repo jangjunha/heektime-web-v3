@@ -1,6 +1,6 @@
 import { Either, left, right } from 'fp-ts/Either';
 
-const ENDPOINT = 'https://auth-dot-heektime-v3.du.r.appspot.com/';
+const ENDPOINT = 'https://auth.api.heektime.heek.kr/';
 
 export type RegisterError =
   | {
