@@ -193,14 +193,19 @@ const useSchools = (): [
       // already requested
       return;
     }
-    setSchools({ ...schools, [id]: { stage: 'requested' } });
+    setSchools(
+      produce((draft) => {
+        draft[id] = { stage: 'requested' };
+      })
+    );
 
     const snapshot = await getDoc(doc(db, 'schools', id));
     if (!snapshot.exists()) {
-      setSchools({
-        ...schools,
-        [id]: { stage: 'error', message: '학교를 찾을 수 없습니다.' },
-      });
+      setSchools(
+        produce((draft) => {
+          draft[id] = { stage: 'error', message: '학교를 찾을 수 없습니다.' };
+        })
+      );
       return;
     }
 
@@ -212,14 +217,19 @@ const useSchools = (): [
       }, identity)
     );
     if (school == null) {
-      setSchools({
-        ...schools,
-        [id]: { stage: 'error', message: '학교를 찾을 수 없습니다.' },
-      });
+      setSchools(
+        produce((draft) => {
+          draft[id] = { stage: 'error', message: '학교를 찾을 수 없습니다.' };
+        })
+      );
       throw new Error('Cannot decode school');
     }
 
-    setSchools({ ...schools, [id]: { stage: 'fetched', school } });
+    setSchools(
+      produce((draft) => {
+        draft[id] = { stage: 'fetched', school };
+      })
+    );
   };
   return [schools, request];
 };
@@ -237,14 +247,19 @@ const useSemesters = (): [
       // already requested
       return;
     }
-    setSemesters({ ...semesters, [path]: { stage: 'requested' } });
+    setSemesters(
+      produce((draft) => {
+        draft[path] = { stage: 'requested' };
+      })
+    );
 
     const snapshot = await getDoc(doc(db, path));
     if (!snapshot.exists()) {
-      setSemesters({
-        ...semesters,
-        [path]: { stage: 'error', message: '학기를 찾을 수 없습니다.' },
-      });
+      setSemesters(
+        produce((draft) => {
+          draft[path] = { stage: 'error', message: '학기를 찾을 수 없습니다.' };
+        })
+      );
       return;
     }
 
@@ -256,14 +271,20 @@ const useSemesters = (): [
       }, identity)
     );
     if (semester == null) {
-      setSemesters({
-        ...semesters,
-        [path]: { stage: 'error', message: '학기를 찾을 수 없습니다.' },
-      });
+      console.debug('semester ', path, ' NOT FOUND 2');
+      setSemesters(
+        produce((draft) => {
+          draft[path] = { stage: 'error', message: '학기를 찾을 수 없습니다.' };
+        })
+      );
       throw new Error('Cannot decode semester');
     }
 
-    setSemesters({ ...semesters, [path]: { stage: 'fetched', semester } });
+    setSemesters(
+      produce((draft) => {
+        draft[path] = { stage: 'fetched', semester };
+      })
+    );
   };
   return [semesters, request];
 };
