@@ -2,8 +2,10 @@ import {
   collection,
   doc,
   getDocs,
+  query,
   serverTimestamp,
   setDoc,
+  where,
 } from 'firebase/firestore';
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
@@ -60,7 +62,10 @@ const useSemesters = (
       }
 
       const querySnapshot = await getDocs(
-        collection(db, 'schools', schoolID, 'semesters')
+        query(
+          collection(db, 'schools', schoolID, 'semesters'),
+          where('status', '==', 'normal')
+        )
       );
       const semesters = querySnapshot.docs.map(
         (snapshot): [string, Semester] => {
