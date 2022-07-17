@@ -20,7 +20,6 @@ const Content = (): React.ReactElement => {
 
   const {
     timetable: [timetableID, timetable],
-    semester,
   } = useContext(TimetableContext);
   const [userID] = useContext(UserContext);
 
@@ -76,11 +75,6 @@ const Content = (): React.ReactElement => {
         {timetable.visibility === 'private' && (
           <span className={layoutStyles.badge} aria-label="비공개">
             🔒
-          </span>
-        )}
-        {semester && (
-          <span className={layoutStyles.badge}>
-            {semester.year}년 {semester.term}
           </span>
         )}
       </Link>
