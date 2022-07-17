@@ -100,16 +100,11 @@ const CreateTimetablePage = (): React.ReactElement => {
   const [isLoading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams({
+    school: window.localStorage.getItem(RECENT_SCHOOL_ID_KEY) ?? '',
+  });
   const selectedSchoolID = searchParams.get('school') || null;
   const selectedSemesterID = searchParams.get('semester') || null;
-
-  useEffect(() => {
-    const recentSchoolID = window.localStorage.getItem(RECENT_SCHOOL_ID_KEY);
-    if (recentSchoolID) {
-      setSearchParams({ school: recentSchoolID });
-    }
-  }, [setSearchParams]);
 
   const schools = useSchools();
   const semesters = useSemesters(selectedSchoolID);
