@@ -14,9 +14,11 @@ const useBasePath = (): string => {
 };
 
 const Layout = ({
+  breadcrumb,
   menu,
   children,
 }: {
+  breadcrumb?: React.ReactNode;
   menu?: React.ReactNode;
   children?: React.ReactNode;
 }): React.ReactElement => {
@@ -26,12 +28,15 @@ const Layout = ({
   return (
     <BaseLayout
       menu={
-        <div className={styles.breadcrumbContainer}>
-          <div className={styles.breadcrumb}>
-            <Link to={basePath}>{user.username}</Link>
+        <>
+          <div className={styles.breadcrumbContainer}>
+            <div className={styles.breadcrumb}>
+              <Link to={basePath}>{user.username}</Link>
+            </div>
+            {breadcrumb}
           </div>
           {menu}
-        </div>
+        </>
       }
     >
       {children}

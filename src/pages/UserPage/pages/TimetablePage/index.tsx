@@ -88,7 +88,7 @@ const Content = (): React.ReactElement => {
   );
 
   return (
-    <Layout menu={breadcrumb}>
+    <Layout breadcrumb={breadcrumb}>
       <MasterDetail
         master={
           <Timetable
