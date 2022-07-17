@@ -10,7 +10,7 @@ import {
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
 import { nanoid } from 'nanoid';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Loading } from '../../../../components';
@@ -119,11 +119,15 @@ const CreateTimetablePage = (): React.ReactElement => {
         </option>
       ));
 
-  const semesterOptions = semesters?.map(([id, semester]) => (
-    <option key={id} value={id}>
-      {semester.year}학년도 {semester.term}
-    </option>
-  ));
+  const semesterOptions = useMemo(
+    () =>
+      semesters?.reverse().map(([id, semester]) => (
+        <option key={id} value={id}>
+          {semester.year}학년도 {semester.term}
+        </option>
+      )),
+    [semesters]
+  );
 
   const handleChangeTitle = (
     event: React.ChangeEvent<HTMLInputElement>
