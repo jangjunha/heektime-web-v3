@@ -1,0 +1,21 @@
+.container {
+  margin: 4px 0 0 0;
+  padding: 4px 0;
+  width: max-content;
+  list-style: none;
+
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 800;
+
+  > li {
+    background-color: white;
+    padding: 4px 8px;
+    cursor: pointer;
+
+    &.focused {
+      background-color: #eee;
+    }
+  }
+}
