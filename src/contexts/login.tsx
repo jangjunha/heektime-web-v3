@@ -34,6 +34,7 @@ const LoginProvider = ({
   useEffect(() => {
     onAuthStateChanged(auth, (authUser): void => {
       setAuthUser(authUser);
+      window.dataLayer.push({ user_id: authUser?.uid ?? null });
       Sentry.addBreadcrumb({
         category: 'auth',
         message:
