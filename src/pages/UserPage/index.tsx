@@ -2,14 +2,9 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
 import React, { useEffect, useState } from 'react';
-import {
-  Outlet,
-  Route,
-  Routes,
-  useParams,
-  useResolvedPath,
-} from 'react-router-dom';
+import { Outlet, Route, useParams, useResolvedPath } from 'react-router-dom';
 
+import { SentryRoutes } from '../..';
 import { Loading } from '../../components';
 import { db } from '../../firebase';
 import { User, userCodec } from '../../types/user';
@@ -94,7 +89,7 @@ const UserPage = (): React.ReactElement => {
     case 'fetched':
       return (
         <UserContext.Provider value={[fetchState.id, fetchState.user]}>
-          <Routes>
+          <SentryRoutes>
             <Route path="/" element={<Wrapper basePath={basePath.pathname} />}>
               <Route index element={<IndexPage />} />
               <Route
@@ -103,7 +98,7 @@ const UserPage = (): React.ReactElement => {
               />
               <Route path="timetable/:id/" element={<TimetablePage />} />
             </Route>
-          </Routes>
+          </SentryRoutes>
         </UserContext.Provider>
       );
     case 'error':

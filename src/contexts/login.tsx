@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { User as AuthUser, onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { fold } from 'fp-ts/Either';
@@ -31,7 +32,17 @@ const LoginProvider = ({
   const [user, setUser] = useState<User | null | undefined>(null);
 
   useEffect(() => {
-    onAuthStateChanged(auth, setAuthUser);
+    onAuthStateChanged(auth, (authUser): void => {
+      setAuthUser(authUser);
+      Sentry.addBreadcrumb({
+        category: 'auth',
+        message:
+          authUser !== null
+            ? `Authenticated user ${authUser.uid}`
+            : 'User unauthenticated',
+        level: 'info',
+      });
+    });
   }, []);
 
   useEffect(() => {
@@ -53,6 +64,18 @@ const LoginProvider = ({
       );
     });
   }, [authUser]);
+
+  useEffect(() => {
+    Sentry.setUser(
+      authUser != null
+        ? {
+            id: authUser.uid,
+            username: user?.username,
+            email: authUser.email ?? undefined,
+          }
+        : null
+    );
+  }, [authUser, user]);
 
   useEffect(() => {
     if (authUser !== null && user === undefined) {
