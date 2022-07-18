@@ -73,6 +73,19 @@ const PolicyPage = (): React.ReactElement => (
               )
             </p>
           </li>
+          <li>
+            <p>
+              Sentry (
+              <a
+                href="https://sentry.io"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                https://sentry.io
+              </a>
+              )
+            </p>
+          </li>
         </ul>
       </section>
       <section>
