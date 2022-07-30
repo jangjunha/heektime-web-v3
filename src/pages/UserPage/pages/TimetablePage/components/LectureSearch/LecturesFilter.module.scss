@@ -73,7 +73,9 @@ $on-color: #48f;
       content: '\e8b6';
       position: absolute;
       left: 6px;
-      top: calc(50% + #{($searchBox-marginTop - $searchBox-marginBottom) / 2});
+      top: calc(
+        50% + calc(($searchBox-marginTop - $searchBox-marginBottom) / 2)
+      );
       transform: translateY(-50%);
       z-index: -1;
     }
