@@ -24,6 +24,19 @@ import styles from './index.module.scss';
 
 const RECENT_SCHOOL_ID_KEY = 'recent-school-id';
 
+const getRecentSchoolID = (): string => {
+  const val = window.localStorage.getItem(RECENT_SCHOOL_ID_KEY) ?? '';
+  switch (val) {
+    case 'korea_univ_anam':
+      return '고려대학교-서울';
+    case 'korea_univ_sejong':
+      return '고려대학교-세종';
+    case 'chungang_univ_seoul':
+      return '중앙대학교-서울';
+  }
+  return val;
+};
+
 const useSchools = (): [string, School][] | undefined => {
   const [schools, setSchools] = useState<[string, School][]>();
   useEffect(() => {
@@ -101,7 +114,7 @@ const CreateTimetablePage = (): React.ReactElement => {
   const [title, setTitle] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams({
-    school: window.localStorage.getItem(RECENT_SCHOOL_ID_KEY) ?? '',
+    school: getRecentSchoolID(),
   });
   const selectedSchoolID = searchParams.get('school') || null;
   const selectedSemesterID = searchParams.get('semester') || null;
