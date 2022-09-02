@@ -117,21 +117,26 @@ const Content = (): React.ReactElement => {
   const menu = (
     <Popover
       menu={
-        <Menu
-          items={[
-            [
-              'change-to-public',
-              timetable.visibility !== 'public' && <>공개로 전환</>,
-            ],
-            [
-              'change-to-private',
-              timetable.visibility !== 'private' && <>비공개로 전환</>,
-            ],
-            ['download-ical', downloadICS !== undefined && <>iCal 다운로드</>],
-            ['delete', <>시간표 삭제</>],
-          ]}
-          onSelectItem={handleClickMenu}
-        />
+        isLoggedInUser && (
+          <Menu
+            items={[
+              [
+                'change-to-public',
+                timetable.visibility !== 'public' && <>공개로 전환</>,
+              ],
+              [
+                'change-to-private',
+                timetable.visibility !== 'private' && <>비공개로 전환</>,
+              ],
+              [
+                'download-ical',
+                downloadICS !== undefined && <>iCal 다운로드</>,
+              ],
+              ['delete', <>시간표 삭제</>],
+            ]}
+            onSelectItem={handleClickMenu}
+          />
+        )
       }
     >
       <button
