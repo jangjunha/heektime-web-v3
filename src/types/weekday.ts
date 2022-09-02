@@ -109,3 +109,62 @@ export const toLocalizedShortName = (o: Weekday): string => {
       return '일';
   }
 };
+
+export const toLuxonWeekday = (a: Weekday): luxon.WeekdayNumbers => {
+  switch (a) {
+    case 'monday':
+      return 1;
+    case 'tuesday':
+      return 2;
+    case 'wednesday':
+      return 3;
+    case 'thursday':
+      return 4;
+    case 'friday':
+      return 5;
+    case 'saturday':
+      return 6;
+    case 'sunday':
+      return 7;
+  }
+};
+
+export const fromLuxonWeekday = (o: luxon.WeekdayNumbers): Weekday => {
+  switch (o) {
+    case 1:
+      return 'monday';
+    case 2:
+      return 'tuesday';
+    case 3:
+      return 'wednesday';
+    case 4:
+      return 'thursday';
+    case 5:
+      return 'friday';
+    case 6:
+      return 'saturday';
+    case 7:
+      return 'sunday';
+  }
+};
+
+export const toRRuleWeekday = (
+  a: Weekday
+): 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU' => {
+  switch (a) {
+    case 'monday':
+      return 'MO';
+    case 'tuesday':
+      return 'TU';
+    case 'wednesday':
+      return 'WE';
+    case 'thursday':
+      return 'TH';
+    case 'friday':
+      return 'FR';
+    case 'saturday':
+      return 'SA';
+    case 'sunday':
+      return 'SU';
+  }
+};
