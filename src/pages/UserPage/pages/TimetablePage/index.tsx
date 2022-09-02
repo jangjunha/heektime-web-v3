@@ -18,6 +18,7 @@ import { TimetableContext } from './contexts';
 import styles from './index.module.scss';
 import { useLectures, useSemester, useTimetable } from './queries';
 import { useEditTimetable } from './queries/useTimetable';
+import { useDownloadICS } from './utils/ics';
 
 const Content = (): React.ReactElement => {
   const location = useLocation();
@@ -34,6 +35,8 @@ const Content = (): React.ReactElement => {
 
   const [isEditing, setEditing] = useState(false);
   const [previewLectures, setPreviewLectures] = useState<MasterLecture[]>([]);
+
+  const downloadICS = useDownloadICS();
 
   const handleDeleteLecture = useCallback(
     async (id: string) => {
@@ -98,6 +101,11 @@ const Content = (): React.ReactElement => {
         menuButtonRef.current?.focus();
         await changeVisibility('private');
         break;
+      case 'download-ical': {
+        menuButtonRef.current?.focus();
+        downloadICS?.();
+        break;
+      }
       case 'delete':
         menuButtonRef.current?.focus();
         await delete_();
@@ -119,6 +127,7 @@ const Content = (): React.ReactElement => {
               'change-to-private',
               timetable.visibility !== 'private' && <>비공개로 전환</>,
             ],
+            ['download-ical', downloadICS !== undefined && <>iCal 다운로드</>],
             ['delete', <>시간표 삭제</>],
           ]}
           onSelectItem={handleClickMenu}
