@@ -163,7 +163,8 @@ const build = (
   if (res.value === undefined) {
     throw new Error('Failed to create events');
   }
-  return new Blob([res.value], { type: 'text/calendar' });
+  const content = res.value.replaceAll('DTSTART:', 'DTSTART;TZID=Asia/Seoul:');
+  return new Blob([content], { type: 'text/calendar' });
 };
 
 export const useDownloadICS = (): (() => void) | undefined => {
