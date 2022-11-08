@@ -6,17 +6,22 @@ import { LoginContext } from '../../contexts/login';
 import styles from './index.module.scss';
 
 const HomePage = (): React.ReactElement => {
-  const [authUser, user] = useContext(LoginContext);
+  const login = useContext(LoginContext);
   return (
     <Layout>
       <div className={styles.hello}>
         <h1>HeekTime</h1>
 
-        {authUser !== null && user !== null && (
+        {login !== null && (
           <div className={styles.userSection}>
-            <p className={styles.welcome}>{user.username}님 환영합니다!</p>
+            <p className={styles.welcome}>
+              {login.user.username}님 환영합니다!
+            </p>
             <br />
-            <Link to={`/user/${user.username}`} className={styles.primary}>
+            <Link
+              to={`/user/${login.user.username}`}
+              className={styles.primary}
+            >
               내 시간표 보러가기&nbsp;&nbsp;&nbsp;〉
             </Link>
           </div>

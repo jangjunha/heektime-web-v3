@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React, { useContext } from 'react';
 
 import Layout from '../../components/Layout';
-import { LoginContext } from '../../contexts/login';
+import { LoginContext, _FirebaseAuthContext } from '../../contexts/login';
 import styles from './index.module.scss';
 
 const ErrorPage = ({
@@ -11,10 +11,11 @@ const ErrorPage = ({
   eventId,
   resetError,
 }: Parameters<FallbackRender>[0]): React.ReactElement => {
-  const [authUser, user] = useContext(LoginContext);
+  const authUser = useContext(_FirebaseAuthContext);
+  const login = useContext(LoginContext);
   const handleClickReport = (): void => {
     showReportDialog({
-      user: { email: authUser?.email ?? undefined, name: user?.username },
+      user: { email: authUser?.email ?? undefined, name: login?.user.username },
       title: '문제가 발생했습니다.',
       subtitle: '문제가 발생한 상황을 설명해주시면 고치는 데 도움이 됩니다.',
       subtitle2: '',

@@ -5,7 +5,7 @@ import { LoginContext } from '../../contexts/login';
 import styles from './LoginMenu.module.scss';
 
 const LoginMenu = (): React.ReactElement => {
-  const [authUser, user] = useContext(LoginContext);
+  const login = useContext(LoginContext);
 
   const location = useLocation();
   const search = new URLSearchParams({
@@ -14,15 +14,9 @@ const LoginMenu = (): React.ReactElement => {
 
   return (
     <div className={styles.wrapper}>
-      {authUser != null ? (
+      {login != null ? (
         <>
-          <div className={styles.profileBox}>
-            {user != null ? (
-              user.username
-            ) : (
-              <span className={styles.email}>({authUser.email})</span>
-            )}
-          </div>
+          <div className={styles.profileBox}>{login.user.username}</div>
           <Link
             to="/sign-out/"
             state={{ skipModal: true }}

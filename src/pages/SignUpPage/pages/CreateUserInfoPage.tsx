@@ -1,11 +1,14 @@
 import classNames from 'classnames';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { Loading } from '../../../components';
-import { LoginContext } from '../../../contexts/login';
+import {
+  _FirebaseAuthContext,
+  _UserDocumentContext,
+} from '../../../contexts/login';
 import { db } from '../../../firebase';
 import styles from './common.module.scss';
 
@@ -29,22 +32,20 @@ const Error = ({
 
 const CreateUserInfoPage = (): React.ReactElement => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [authUser, user] = useContext(LoginContext);
-  useEffect(() => {
-    if (user !== null) {
-      navigate(searchParams.get('redirect') || '/', { replace: true });
-    }
-  }, [user, navigate, searchParams]);
+  const authUser = useContext(_FirebaseAuthContext);
+  const userState = useContext(_UserDocumentContext);
 
   const [isLoading, setLoading] = useState(false);
   const [isValidationEnabled, enableValidation] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const [username, setUsername] = useState('');
+
   if (authUser === null) {
-    navigate('/sign-up/', { replace: true });
-    return <></>;
+    return <Navigate to="/sign-up/" replace />;
+  }
+  if (userState.status === 'logged-in') {
+    return <Navigate to={searchParams.get('redirect') || '/'} replace />;
   }
 
   const validate = (): yup.ValidationError | undefined => {
@@ -102,8 +103,6 @@ const CreateUserInfoPage = (): React.ReactElement => {
     } catch (err) {
       setErrorMessage('등록에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }
-    setLoading(false);
-    // Will be redirected by context behavior + effect hook
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent): Promise<void> => {

@@ -3,12 +3,13 @@ import { FirebaseError } from 'firebase/app';
 import { signInWithCustomToken } from 'firebase/auth';
 import { fold } from 'fp-ts/lib/Either';
 import { identity, pipe } from 'fp-ts/lib/function';
-import React, { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { login, register } from '../../../apis/auth-service';
 import { Loading } from '../../../components';
+import { _FirebaseAuthContext } from '../../../contexts/login';
 import { auth } from '../../../firebase';
 import styles from './common.module.scss';
 
@@ -34,6 +35,8 @@ const Error = ({
 );
 
 const RegisterPage = (): React.ReactElement => {
+  const authUser = useContext(_FirebaseAuthContext);
+
   const [isLoading, setLoading] = useState(false);
   const [isValidationEnabled, enableValidation] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -43,6 +46,18 @@ const RegisterPage = (): React.ReactElement => {
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  if (authUser !== null) {
+    return (
+      <Navigate
+        to={{
+          pathname: '../create-user-info/',
+          search: searchParams.toString(),
+        }}
+        replace
+      />
+    );
+  }
 
   const validate = (): yup.ValidationError | undefined => {
     try {
@@ -122,15 +137,6 @@ const RegisterPage = (): React.ReactElement => {
       navigate({ pathname: '/sign-in/', search: searchParams.toString() });
       return;
     }
-
-    setLoading(false);
-    navigate(
-      {
-        pathname: '../create-user-info/',
-        search: searchParams.toString(),
-      },
-      { replace: true }
-    );
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent): Promise<void> => {

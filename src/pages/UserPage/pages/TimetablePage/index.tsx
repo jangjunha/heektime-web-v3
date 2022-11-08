@@ -30,8 +30,8 @@ const Content = (): React.ReactElement => {
   const [userID] = useContext(UserContext);
   const { changeVisibility, delete_ } = useEditTimetable(userID, timetableID);
 
-  const [authUser] = useContext(LoginContext);
-  const isLoggedInUser = authUser?.uid === userID;
+  const login = useContext(LoginContext);
+  const isLoggedInUser = userID === login?.uid;
 
   const [isEditing, setEditing] = useState(false);
   const [previewLectures, setPreviewLectures] = useState<MasterLecture[]>([]);

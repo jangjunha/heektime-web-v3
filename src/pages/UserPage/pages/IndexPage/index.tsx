@@ -398,13 +398,13 @@ const EmptyDataset = ({
 
 const IndexPageContent = (): React.ReactElement => {
   const [id] = useContext(UserContext);
-  const [authUser] = useContext(LoginContext);
-  const isLoggedInUser = authUser?.uid != null && id === authUser.uid;
+  const login = useContext(LoginContext);
+  const isLoggedInUser = id === login?.uid;
   const loadMoreRef = useRef<HTMLButtonElement>(null);
 
   const [isLoading, groupedState, loadNext] = useGroupedTimetables(
     id,
-    id === authUser?.uid
+    isLoggedInUser
   );
 
   useEffect(() => {
